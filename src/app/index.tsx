@@ -1,18 +1,23 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import Button from "@/components/button";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>
-        Одно из самых вкусных кофе в городе!
-      </Text>
-      <Text style={styles.smallText}>
-        Свежие зёрна, настоящая арабика и бережная обжарка
-      </Text>
-      <View style={styles.button}>
-        <Button title="Go to Details" />
+    <ImageBackground
+      source={require("@/assets/images/splash-bg.png")}
+      resizeMode="cover"
+      style={styles.image}
+    >
+      <View style={styles.container}>
+        <Text style={styles.headerText}>
+          Одно из самых вкусных кофе в городе!
+        </Text>
+        <Text style={styles.smallText}>
+          Свежие зёрна, настоящая арабика и бережная обжарка
+        </Text>
+        <Button text="Начать" />
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -22,15 +27,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "auto",
-    backgroundColor: "#000000",
   },
-  button: {
-    marginBottom: "5%",
-    marginTop: 24,
-    width: 315,
-    height: 62,
-    borderRadius: 16,
-    backgroundColor: "#C67C4E",
+  image: {
+    flex: 1,
+    justifyContent: "center",
   },
   smallText: {
     width: 315,
