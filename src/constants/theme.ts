@@ -64,6 +64,7 @@ export const FontSizes = {
   f12: 12,
   f14: 14,
   f16: 16,
+  f34: 34,
 } as const;
 
 export const Spacing = {

@@ -1,32 +1,57 @@
 import Button from "@/components/button";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import HeaderText from "@/components/header-text";
+import { Colors, FontSizes } from "@/constants/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { Animated, ImageBackground, StyleSheet, Text } from "react-native";
 
 export default function HomeScreen() {
+  const animatedValue = new Animated.Value(0);
+
+  Animated.timing(animatedValue, {
+    toValue: 82,
+    duration: 2000,
+    useNativeDriver: false,
+  }).start();
+
   return (
     <ImageBackground
       source={require("@/assets/images/splash-bg.png")}
       resizeMode="cover"
       style={styles.image}
     >
-      <View style={styles.container}>
-        <Text style={styles.headerText}>
-          Одно из самых вкусных кофе в городе!
-        </Text>
+      <LinearGradient
+        colors={['rgba(0, 0, 0, 0)', '#000000']}
+        locations={[0, 0.2367]}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={styles.container}
+      >
+        <Animated.View
+          style={[
+            styles.titleText,
+            {
+              transform: [{ translateY: animatedValue }],
+            },
+          ]}
+        >
+          <HeaderText text="Одно из самых вкусных кофе в городе!" />
+        </Animated.View>
         <Text style={styles.smallText}>
           Свежие зёрна, настоящая арабика и бережная обжарка
         </Text>
         <Button text="Начать" />
-      </View>
+      </LinearGradient>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 'auto',
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
-    marginTop: "auto",
+    marginBottom: 43,
   },
   image: {
     flex: 1,
@@ -36,23 +61,14 @@ const styles = StyleSheet.create({
     width: 315,
     height: 44,
     fontFamily: "Sora",
-    fontSize: 14,
+    fontSize: FontSizes.f14,
     fontWeight: "400",
     fontStyle: "normal",
     letterSpacing: 1,
     textAlign: "center",
-    color: "#A9A9A9",
+    color: Colors.main.textGray,
   },
-  headerText: {
-    width: 315,
-    height: 129,
-    fontFamily: "Sora",
-    fontSize: 34,
-    fontWeight: "600",
-    fontStyle: "normal",
-    lineHeight: 34,
-    letterSpacing: 1,
-    textAlign: "center",
-    color: "#FFFFFF",
+  titleText: {
+    marginBottom: 41,
   },
 });
