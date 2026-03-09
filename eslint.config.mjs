@@ -42,10 +42,10 @@ export default [
       'react-native/no-single-element-style-arrays': 'error',
 
       // React
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
-      'react/display-name': 'off',
-      'react-hooks/exhaustive-deps': 'off',
+      'react/react-in-jsx-scope': 'warn',
+      'react/prop-types': 'warn',
+      'react/display-name': 'warn',
+      'react-hooks/exhaustive-deps': 'warn',
 
       // Prettier
       'prettier/prettier': [
