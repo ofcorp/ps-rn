@@ -8,7 +8,18 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:check": "eslint . --max-warnings 0",
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "format": "prettier --write . && eslint . --fix"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@react-navigation/bottom-tabs": "^7.7.3",
@@ -29,6 +40,7 @@
     "expo-system-ui": "~55.0.9",
     "expo-web-browser": "~55.0.9",
     "react": "19.2.0",
+    "react-devtools": "^7.0.1",
     "react-dom": "19.2.0",
     "react-native": "0.83.2",
     "react-native-gesture-handler": "~2.30.0",
@@ -40,7 +52,14 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
-    "typescript": "~5.9.2"
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-native": "^5.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.56.1"
   },
   "private": true
 }

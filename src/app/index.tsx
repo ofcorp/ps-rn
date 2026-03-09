@@ -1,8 +1,8 @@
-import Button from "@/components/button";
-import HeaderText from "@/components/header-text";
-import { Colors, FontSizes } from "@/constants/theme";
-import { LinearGradient } from "expo-linear-gradient";
-import { Animated, ImageBackground, StyleSheet, Text } from "react-native";
+import Button from '@/components/button';
+import HeaderText from '@/components/header-text';
+import { Colors, FontSizes } from '@/constants/theme';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Animated, ImageBackground, StyleSheet, Text } from 'react-native';
 
 export default function HomeScreen() {
   const animatedValue = new Animated.Value(0);
@@ -15,7 +15,7 @@ export default function HomeScreen() {
 
   return (
     <ImageBackground
-      source={require("@/assets/images/splash-bg.png")}
+      source={require('@/assets/images/splash-bg.png')}
       resizeMode="cover"
       style={styles.image}
     >
@@ -36,9 +36,7 @@ export default function HomeScreen() {
         >
           <HeaderText text="Одно из самых вкусных кофе в городе!" />
         </Animated.View>
-        <Text style={styles.smallText}>
-          Свежие зёрна, настоящая арабика и бережная обжарка
-        </Text>
+        <Text style={styles.smallText}>Свежие зёрна, настоящая арабика и бережная обжарка</Text>
         <Button text="Начать" />
       </LinearGradient>
     </ImageBackground>
@@ -48,24 +46,24 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     marginTop: 'auto',
-    flexDirection: "column",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     marginBottom: 43,
   },
   image: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   smallText: {
     width: 315,
     height: 44,
-    fontFamily: "Sora",
+    fontFamily: 'Sora',
     fontSize: FontSizes.f14,
-    fontWeight: "400",
-    fontStyle: "normal",
+    fontWeight: '400',
+    fontStyle: 'normal',
     letterSpacing: 1,
-    textAlign: "center",
+    textAlign: 'center',
     color: Colors.main.textGray,
   },
   titleText: {
