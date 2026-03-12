@@ -1,6 +1,6 @@
 import Button from '@/components/button';
 import HeaderText from '@/components/header-text';
-import { Colors, FontSizes } from '@/constants/theme';
+import { Colors, FontFamily, FontSizes } from '@/constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Animated, ImageBackground, StyleSheet, Text } from 'react-native';
 
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   smallText: {
     width: 315,
     height: 44,
-    fontFamily: 'Sora',
+    fontFamily: FontFamily.regular,
     fontSize: FontSizes.f14,
     fontWeight: '400',
     fontStyle: 'normal',
