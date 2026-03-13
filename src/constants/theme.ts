@@ -15,7 +15,7 @@ export const Colors = {
     backgroundWhite: '#FFFFFF',
     backgroundBlack: '#000000',
     button: '#C67C4E',
-    buttonHover: '#A76237'
+    buttonHover: '#A76237',
   },
   light: {
     text: '#000000',
@@ -67,6 +67,10 @@ export const FontSizes = {
   f34: 34,
 } as const;
 
+export const FontFamily = {
+  regular: 'Sora',
+} as const;
+
 export const Spacing = {
   half: 2,
   one: 4,
@@ -78,12 +82,12 @@ export const Spacing = {
 } as const;
 
 export const Gaps = {
-	g16: 16,
-	g50: 50
+  g16: 16,
+  g50: 50,
 } as const;
 
 export const Radius = {
-	r16: 16
+  r16: 16,
 } as const;
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
