@@ -12,10 +12,17 @@ export const Colors = {
     textWhite: '#FFFFFF',
     textBlack: '#000000',
     textGray: '#A9A9A9',
+    textDarkGray: '#989898',
     backgroundWhite: '#FFFFFF',
     backgroundBlack: '#000000',
+    backgroundGray: '#313131',
     button: '#C67C4E',
     buttonHover: '#A76237',
+    categoryTextInactive: '#2F4B4E',
+    cardNameText: '#2F2D2C',
+    cardDescriptionText: '#9B9B9B',
+    cardPriceText: '#2F4B4E',
+    addButtonBackground: '#C67C4E',
   },
   light: {
     text: '#000000',
@@ -64,6 +71,8 @@ export const FontSizes = {
   f12: 12,
   f14: 14,
   f16: 16,
+  f18: 18,
+  f20: 20,
   f34: 34,
 } as const;
 
@@ -87,6 +96,9 @@ export const Gaps = {
 } as const;
 
 export const Radius = {
+  r8: 8,
+  r10: 10,
+  r12: 12,
   r16: 16,
 } as const;
 

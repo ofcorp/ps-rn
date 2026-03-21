@@ -1,0 +1,171 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-02-29T13:32:13.829Z",
+  "__export_source": "insomnia.desktop.app:v8.6.1",
+  "resources": [
+    {
+      "_id": "req_f042c4090d574f5ea9b111ed9eaa43ce",
+      "parentId": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "modified": 1709113339475,
+      "created": 1709113161824,
+      "url": "https://purpleschool.ru/coffee-api/id/1",
+      "name": "GetById",
+      "description": "",
+      "method": "GET",
+      "body": {
+
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {
+
+      },
+      "metaSortKey": -1709113161824,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "parentId": null,
+      "modified": 1709113092161,
+      "created": 1709113092161,
+      "name": "React Native",
+      "description": "",
+      "scope": "design",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_823fbbf69d9643a3b6e60a9867fbfa16",
+      "parentId": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "modified": 1709210539177,
+      "created": 1709113548968,
+      "url": "",
+      "name": "Filter",
+      "description": "",
+      "method": "GET",
+      "body": {
+
+      },
+      "parameters": [
+        {
+          "id": "pair_7effffee5aa54c61b0a11c322299dfec",
+          "name": "type",
+          "value": "cappuccino",
+          "description": "",
+          "disabled": false
+        },
+        {
+          "id": "pair_7f06e7d50f65483e8504dc53a063cd45",
+          "name": "text",
+          "value": "шоко",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {
+
+      },
+      "metaSortKey": -1709113143664.5,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_8b86b92242e749efb09cf2829e82427f",
+      "parentId": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "modified": 1709133118538,
+      "created": 1709113125505,
+      "url": "https://purpleschool.ru/coffee-api/order",
+      "name": "Order",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n\t\"address\": \"sdfdsf\",\n\t\"orderItems\": [\n\t\t{ \"id\": 1, \"size\": \"L\", \"quantity\": 1 }\n\t]\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "User-Agent",
+          "value": "insomnia/8.6.1"
+        }
+      ],
+      "authentication": {
+
+      },
+      "metaSortKey": -1709113125505,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "env_9a4fd9ec82bbb40b1c867a5922d0fd59315e541a",
+      "parentId": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "modified": 1709113092163,
+      "created": 1709113092163,
+      "name": "Base Environment",
+      "data": {
+
+      },
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1709113092163,
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_9a4fd9ec82bbb40b1c867a5922d0fd59315e541a",
+      "parentId": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "modified": 1709113092164,
+      "created": 1709113092164,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "spc_224bc5d88c094ecc9be672d7dd7878be",
+      "parentId": "wrk_9ce0d4a20c554a918da11e3594337987",
+      "modified": 1709188464904,
+      "created": 1709113092162,
+      "fileName": "React Native",
+      "contents": "",
+      "contentType": "yaml",
+      "_type": "api_spec"
+    }
+  ]
+}

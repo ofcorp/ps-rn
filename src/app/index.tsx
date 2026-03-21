@@ -2,9 +2,11 @@ import Button from '@/components/button';
 import HeaderText from '@/components/header-text';
 import { Colors, FontFamily, FontSizes } from '@/constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { Animated, ImageBackground, StyleSheet, Text } from 'react-native';
 
 export default function HomeScreen() {
+  const router = useRouter();
   const animatedValue = new Animated.Value(0);
 
   Animated.timing(animatedValue, {
@@ -37,7 +39,7 @@ export default function HomeScreen() {
           <HeaderText text="Одно из самых вкусных кофе в городе!" />
         </Animated.View>
         <Text style={styles.smallText}>Свежие зёрна, настоящая арабика и бережная обжарка</Text>
-        <Button text="Начать" />
+        <Button text="Начать" onPress={() => router.push('/catalog')} />
       </LinearGradient>
     </ImageBackground>
   );
