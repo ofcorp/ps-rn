@@ -23,6 +23,9 @@ export const Colors = {
     cardDescriptionText: '#9B9B9B',
     cardPriceText: '#2F4B4E',
     addButtonBackground: '#C67C4E',
+    shadowColor: '#E4E4E4',
+    tabImage: '#C6C6C6',
+    divider: '#E3E3E3',
   },
   light: {
     text: '#000000',
