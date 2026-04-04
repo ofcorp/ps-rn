@@ -8,14 +8,15 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default function TabLayout() {
   const pathname = usePathname();
-  const isHomeActive = pathname === '/' || pathname === '/index';
-  const isCartActive = pathname === '/cart';
+  const isHomeActive = pathname === '/catalog' || pathname.startsWith('/catalog/');
+  const isCartActive = ['/cart', '/address', '/success'].includes(pathname);
+  const hideTabs = pathname === '/success'; // hide only where you really want
 
   return (
     <Tabs>
       <TabSlot />
-      <TabList style={[styles.tabList, isCartActive && styles.tabListHidden]}>
-        <TabTrigger name="index" href="/" style={styles.tabTrigger}>
+      <TabList style={[styles.tabList, hideTabs && styles.tabListHidden]}>
+        <TabTrigger name="catalog" href="/catalog" style={styles.tabTrigger}>
           <View style={styles.tabInner}>
             <View style={styles.img}>
               <HomeIcon color={isHomeActive ? Colors.main.button : Colors.main.tabImage} />
@@ -32,6 +33,12 @@ export default function TabLayout() {
             </View>
             <Text style={styles.tabText}>Заказ</Text>
           </View>
+        </TabTrigger>
+        <TabTrigger name="address" href="/address" style={styles.hiddenTabTrigger}>
+          <View />
+        </TabTrigger>
+        <TabTrigger name="success" href="/success" style={styles.hiddenTabTrigger}>
+          <View />
         </TabTrigger>
         <View style={styles.centerDivider} pointerEvents="none" />
         <View style={styles.homeIndicator} pointerEvents="none" />
@@ -63,6 +70,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 14,
     paddingBottom: 26,
+  },
+  hiddenTabTrigger: {
+    display: 'none',
   },
   tabInner: {
     flexDirection: 'row',

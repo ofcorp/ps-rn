@@ -39,7 +39,7 @@ export default function HomeScreen() {
           <HeaderText text="Одно из самых вкусных кофе в городе!" />
         </Animated.View>
         <Text style={styles.smallText}>Свежие зёрна, настоящая арабика и бережная обжарка</Text>
-        <Button text="Начать" onPress={() => router.push('/(app)')} />
+        <Button text="Начать" onPress={() => router.push('/catalog')} />
       </LinearGradient>
     </ImageBackground>
   );
