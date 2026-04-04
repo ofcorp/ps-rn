@@ -7,7 +7,16 @@ import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Linking,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function AddressScreen() {
@@ -42,10 +51,24 @@ export default function AddressScreen() {
 
   const getLocation = async () => {
     try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
+      const { status, canAskAgain } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        console.warn('Permission to access location was denied');
-        return;
+        Alert.alert(
+          'Нет доступа к геолокации',
+          'Разрешите доступ к местоположению, чтобы автоматически определить ваш адрес.',
+          canAskAgain
+            ? [{ text: 'OK' }]
+            : [
+                { text: 'Отмена', style: 'cancel' },
+                {
+                  text: 'Открыть настройки',
+                  onPress: () => {
+                    void Linking.openSettings();
+                  },
+                },
+              ],
+        );
+        return null;
       }
 
       const location = await Location.getCurrentPositionAsync({});
@@ -65,7 +88,7 @@ export default function AddressScreen() {
       const [result] = await Location.reverseGeocodeAsync({ latitude, longitude });
       if (result) {
         const { street, city, region, postalCode } = result;
-        return `${street}, ${city}, ${region}, ${postalCode}`;
+        return [street, city, region, postalCode].filter(Boolean).join(', ');
       }
     } catch (error) {
       console.error('Error converting location to address:', error);
