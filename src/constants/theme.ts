@@ -13,6 +13,7 @@ export const Colors = {
     textBlack: '#000000',
     textGray: '#A9A9A9',
     textDarkGray: '#989898',
+    textLabel: '#B7B7B7',
     backgroundWhite: '#FFFFFF',
     backgroundBlack: '#000000',
     backgroundGray: '#313131',
