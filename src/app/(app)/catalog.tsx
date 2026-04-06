@@ -34,7 +34,11 @@ export default function CatalogScreen() {
   return (
     <View style={styles.rootContainer}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.headerBackground}>
           <LocationHeader />
 

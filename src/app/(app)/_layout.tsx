@@ -8,9 +8,10 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default function TabLayout() {
   const pathname = usePathname();
-  const isHomeActive = pathname === '/catalog' || pathname.startsWith('/catalog/');
+  const isDetailRoute = !['/catalog', '/cart', '/address', '/success'].includes(pathname);
+  const isHomeActive = pathname === '/catalog' || pathname.startsWith('/catalog/') || isDetailRoute;
   const isCartActive = ['/cart', '/address', '/success'].includes(pathname);
-  const hideTabs = pathname === '/success'; // hide only where you really want
+  const hideTabs = pathname === '/success' || isDetailRoute;
 
   return (
     <Tabs>
