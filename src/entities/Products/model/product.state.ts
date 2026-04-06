@@ -9,8 +9,20 @@ export interface IProductState {
   error: string | null;
 }
 
+export interface IProductDetailsState {
+  product: IProduct | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
 export const productAtom = atom<IProductState>({
   products: [],
+  isLoading: false,
+  error: null,
+});
+
+export const productDetailsAtom = atom<IProductDetailsState>({
+  product: null,
   isLoading: false,
   error: null,
 });
@@ -21,6 +33,7 @@ type LoadProductsParams = {
 };
 
 let currentRequestController: AbortController | null = null;
+let currentProductRequestController: AbortController | null = null;
 
 export const loadProductsAtom = atom(null, async (_get, set, params: LoadProductsParams) => {
   currentRequestController?.abort();
@@ -72,6 +85,55 @@ export const loadProductsAtom = atom(null, async (_get, set, params: LoadProduct
   } finally {
     if (currentRequestController === controller) {
       currentRequestController = null;
+    }
+  }
+});
+
+export const loadProductByIdAtom = atom(null, async (_get, set, id: number | string) => {
+  currentProductRequestController?.abort();
+
+  const controller = new AbortController();
+  currentProductRequestController = controller;
+
+  set(productDetailsAtom, {
+    product: null,
+    isLoading: true,
+    error: null,
+  });
+
+  try {
+    const { data } = await axios.get<IProduct>(`${API.byId}${id}`, {
+      signal: controller.signal,
+    });
+
+    if (currentProductRequestController !== controller) {
+      return;
+    }
+    set(productDetailsAtom, {
+      product: data,
+      isLoading: false,
+      error: null,
+    });
+  } catch (error) {
+    if (axios.isCancel(error) || controller.signal.aborted) {
+      return;
+    }
+
+    if (currentProductRequestController !== controller) {
+      return;
+    }
+
+    set(productDetailsAtom, {
+      product: null,
+      isLoading: false,
+      error:
+        error instanceof AxiosError
+          ? (error.response?.data?.message ?? 'Request failed')
+          : 'Unknown error',
+    });
+  } finally {
+    if (currentProductRequestController === controller) {
+      currentProductRequestController = null;
     }
   }
 });

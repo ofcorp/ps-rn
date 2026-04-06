@@ -1,6 +1,7 @@
+import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
+import { StyleSheet, Text, View } from 'react-native';
 import { productAtom } from '../model/product.state';
-import { Text, View, StyleSheet } from 'react-native';
 import { CoffeeCard } from './coffie-card';
 
 export default function CoffeeGrid() {
@@ -29,7 +30,7 @@ export default function CoffeeGrid() {
             subTitle={products[i].subTitle}
             price={products[i].price}
             rating={products[i].rating}
-            //onAddPress={() => handleAddToCart(products[i].id)}
+            onAddPress={() => router.push(`/product/${products[i].id}`)}
           />
         </View>
         {i + 1 < products.length && (
@@ -40,7 +41,7 @@ export default function CoffeeGrid() {
               subTitle={products[i + 1].subTitle}
               price={products[i + 1].price}
               rating={products[i + 1].rating}
-              //onAddPress={() => handleAddToCart(products[i + 1].id)}
+              onAddPress={() => router.push(`/product/${products[i + 1].id}`)}
             />
           </View>
         )}
