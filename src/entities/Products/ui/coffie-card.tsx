@@ -1,18 +1,10 @@
 import React from 'react';
 import { View, Image, Text, Pressable, StyleSheet, ImageSourcePropType } from 'react-native';
-import { useTheme } from '@/hooks/use-theme';
 import { Colors, FontFamily, FontSizes, Radius } from '@/constants/theme';
+import { router } from 'expo-router';
+import { IProduct } from '../model/product.model';
 
-interface CoffeeCardProps {
-  image: ImageSourcePropType | string;
-  rating: number;
-  name: string;
-  subTitle: string;
-  price: number;
-  onAddPress?: () => void;
-}
-
-export function CoffeeCard({ image, rating, name, subTitle, price, onAddPress }: CoffeeCardProps) {
+export function CoffeeCard({ id, image, rating, name, subTitle, price }: IProduct) {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
@@ -32,7 +24,11 @@ export function CoffeeCard({ image, rating, name, subTitle, price, onAddPress }:
 
         <View style={styles.footerContainer}>
           <Text style={styles.priceText}>{price} ₽</Text>
-          <Pressable style={styles.addButton} onPress={onAddPress} hitSlop={8}>
+          <Pressable
+            style={styles.addButton}
+            onPress={() => router.push(`/product/${id}`)}
+            hitSlop={8}
+          >
             <Text style={styles.addButtonText}>+</Text>
           </Pressable>
         </View>
@@ -44,12 +40,13 @@ export function CoffeeCard({ image, rating, name, subTitle, price, onAddPress }:
 const styles = StyleSheet.create({
   container: {
     width: 149,
+    height: 249,
     backgroundColor: Colors.main.backgroundWhite,
     borderRadius: Radius.r16,
     overflow: 'hidden',
   },
   imageContainer: {
-    width: '100%',
+    width: 141,
     height: 132,
     borderRadius: Radius.r16,
     overflow: 'hidden',

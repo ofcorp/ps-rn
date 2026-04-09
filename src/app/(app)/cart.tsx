@@ -2,43 +2,45 @@ import EditIcon from '@/assets/icons/edit';
 import Button from '@/components/button';
 import { BottomTabInset, Colors, FontFamily, FontSizes, Radius, Spacing } from '@/constants/theme';
 import { productAtom } from '@/entities/Products/model/product.state';
-import { userAtom } from '@/entities/User/model/user.state';
+import { updateUserAtom, userAtom } from '@/entities/User/model/user.state';
 import { router } from 'expo-router';
-import { useAtomValue } from 'jotai';
-import { useMemo, useState } from 'react';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-const DEFAULT_PRODUCT = {
-  id: 0,
-  name: 'Капучино',
-  subTitle: 'с шоколадом / M',
-  type: 'cappuccino',
-  price: 270,
-  image: '',
-  description: '',
-  rating: 4.8,
-};
 
 const DELIVERY_PRICE = 100;
 
 export default function CartScreen() {
   const { products } = useAtomValue(productAtom);
   const { user } = useAtomValue(userAtom);
-  const [quantity, setQuantity] = useState(1);
+  const saveUser = useSetAtom(updateUserAtom);
 
-  const cartProduct = useMemo(() => {
-    return (
-      products.find(product => product.type?.toLowerCase() === 'cappuccino') ??
-      products[0] ??
-      DEFAULT_PRODUCT
-    );
-  }, [products]);
-
+  const cartItems = user?.cart ?? [];
   const deliveryAddress = user?.address?.trim() || 'Не задан';
   const deliveryComment = user?.comment?.trim() || 'Комментарий к доставке';
-  const itemsPrice = cartProduct.price * quantity;
-  const totalPrice = itemsPrice + DELIVERY_PRICE;
+  const itemsPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const deliveryPrice = cartItems.length ? DELIVERY_PRICE : 0;
+  const totalPrice = itemsPrice + deliveryPrice;
+
+  const handleQuantityChange = async (productId: number, size: string, delta: number) => {
+    if (!user) {
+      return;
+    }
+
+    const updatedCart = user.cart
+      .map(item =>
+        item.productId === productId && item.size === size
+          ? { ...item, quantity: item.quantity + delta }
+          : item,
+      )
+      .filter(item => item.quantity > 0);
+
+    await saveUser({
+      address: user.address,
+      comment: user.comment,
+      cart: updatedCart,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -81,49 +83,76 @@ export default function CartScreen() {
 
           <View style={styles.line} />
 
-          <View style={styles.itemRow}>
-            <View style={styles.itemInfo}>
-              {cartProduct.image ? (
-                <Image source={{ uri: cartProduct.image }} style={styles.productImage} />
-              ) : (
-                <View style={[styles.productImage, styles.productImageFallback]}>
-                  <Text style={styles.productImageFallbackText}>☕️</Text>
-                </View>
-              )}
+          {cartItems.length ? (
+            <View style={styles.cartList}>
+              {cartItems.map((cartItem, index) => {
+                const productImage = products.find(
+                  product => product.id === cartItem.productId,
+                )?.image;
+                const itemSubtitle = [cartItem.subTitle, cartItem.size].filter(Boolean).join(' / ');
 
-              <View style={styles.itemTextBlock}>
-                <Text style={styles.itemName}>{cartProduct.name}</Text>
-                <Text style={styles.itemSubtitle}>{cartProduct.subTitle}</Text>
-              </View>
+                return (
+                  <View key={`${cartItem.productId}-${cartItem.size}`} style={styles.cartItemBlock}>
+                    <View style={styles.itemRow}>
+                      <View style={styles.itemInfo}>
+                        {productImage ? (
+                          <Image source={{ uri: productImage }} style={styles.productImage} />
+                        ) : (
+                          <View style={[styles.productImage, styles.productImageFallback]}>
+                            <Text style={styles.productImageFallbackText}>☕️</Text>
+                          </View>
+                        )}
+
+                        <View style={styles.itemTextBlock}>
+                          <Text style={styles.itemName}>{cartItem.name}</Text>
+                          <Text style={styles.itemSubtitle}>{itemSubtitle}</Text>
+                        </View>
+                      </View>
+
+                      <View style={styles.counterWrap}>
+                        <Pressable
+                          accessibilityLabel={
+                            cartItem.quantity === 1
+                              ? 'Удалить товар из корзины'
+                              : 'Уменьшить количество'
+                          }
+                          accessibilityRole="button"
+                          onPress={() =>
+                            void handleQuantityChange(cartItem.productId, cartItem.size, -1)
+                          }
+                          style={styles.counterButton}
+                        >
+                          <Text style={styles.counterSymbol}>−</Text>
+                        </Pressable>
+
+                        <Text style={styles.counterValue}>{cartItem.quantity}</Text>
+
+                        <Pressable
+                          accessibilityLabel="Увеличить количество"
+                          accessibilityRole="button"
+                          onPress={() =>
+                            void handleQuantityChange(cartItem.productId, cartItem.size, 1)
+                          }
+                          style={styles.counterButton}
+                        >
+                          <Text style={styles.counterSymbol}>+</Text>
+                        </Pressable>
+                      </View>
+                    </View>
+
+                    {index < cartItems.length - 1 ? <View style={styles.line} /> : null}
+                  </View>
+                );
+              })}
             </View>
-
-            <View style={styles.counterWrap}>
-              <Pressable
-                accessibilityLabel="Уменьшить количество"
-                accessibilityRole="button"
-                disabled={quantity === 1}
-                onPress={() => setQuantity(current => Math.max(1, current - 1))}
-                style={[styles.counterButton, quantity === 1 && styles.counterButtonDisabled]}
-              >
-                <Text
-                  style={[styles.counterSymbol, quantity === 1 && styles.counterSymbolDisabled]}
-                >
-                  −
-                </Text>
-              </Pressable>
-
-              <Text style={styles.counterValue}>{quantity}</Text>
-
-              <Pressable
-                accessibilityLabel="Увеличить количество"
-                accessibilityRole="button"
-                onPress={() => setQuantity(current => current + 1)}
-                style={styles.counterButton}
-              >
-                <Text style={styles.counterSymbol}>+</Text>
-              </Pressable>
+          ) : (
+            <View style={styles.emptyCart}>
+              <Text style={styles.emptyCartTitle}>Корзина пуста</Text>
+              <Text style={styles.emptyCartText}>
+                Добавьте напитки из каталога, чтобы оформить заказ.
+              </Text>
             </View>
-          </View>
+          )}
 
           <View style={styles.summaryDivider} />
 
@@ -138,7 +167,7 @@ export default function CartScreen() {
 
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Доставка</Text>
-                <Text style={styles.summaryValue}>{DELIVERY_PRICE} ₽</Text>
+                <Text style={styles.summaryValue}>{deliveryPrice} ₽</Text>
               </View>
             </View>
 
@@ -152,7 +181,10 @@ export default function CartScreen() {
         </View>
 
         <View style={styles.footer}>
-          <Button onPress={() => router.push('/(app)/success')} text="Заказать" />
+          <Button
+            onPress={() => router.push(cartItems.length ? '/(app)/success' : '/(app)/catalog')}
+            text={cartItems.length ? 'Заказать' : 'Перейти в каталог'}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -249,6 +281,31 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#EAEAEA',
   },
+  cartList: {
+    gap: 16,
+  },
+  cartItemBlock: {
+    gap: 16,
+  },
+  emptyCart: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+    gap: 8,
+  },
+  emptyCartTitle: {
+    color: Colors.main.cardNameText,
+    fontSize: FontSizes.f16,
+    fontFamily: FontFamily.regular,
+    fontWeight: '600',
+  },
+  emptyCartText: {
+    color: Colors.main.cardDescriptionText,
+    fontSize: FontSizes.f12,
+    lineHeight: 18,
+    fontFamily: FontFamily.regular,
+    textAlign: 'center',
+  },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -305,17 +362,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  counterButtonDisabled: {
-    opacity: 0.6,
-  },
   counterSymbol: {
     color: Colors.main.cardNameText,
     fontSize: FontSizes.f18,
     lineHeight: 18,
     fontFamily: FontFamily.regular,
-  },
-  counterSymbolDisabled: {
-    color: Colors.main.textGray,
   },
   counterValue: {
     color: Colors.main.cardNameText,
