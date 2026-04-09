@@ -1,6 +1,6 @@
 import { Colors, FontFamily, FontSizes, Radius } from '@/constants/theme';
-import { Categories } from '@/entities/Products/model/product.model';
 import { loadProductByIdAtom, productDetailsAtom } from '@/entities/Products/model/product.state';
+import { addToCartAtom, userAtom } from '@/entities/User/model/user.state';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
@@ -20,21 +20,14 @@ const SIZE_OPTIONS = ['S', 'M', 'L'] as const;
 
 type CupSize = (typeof SIZE_OPTIONS)[number];
 
-function InfoChip({ icon, label }: { icon: string; label: string }) {
-  return (
-    <View style={styles.infoChip}>
-      <Text style={styles.infoChipIcon}>{icon}</Text>
-      <Text style={styles.infoChipText}>{label}</Text>
-    </View>
-  );
-}
-
 export default function CatalogItemScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const loadProductById = useSetAtom(loadProductByIdAtom);
   const { product, isLoading, error } = useAtomValue(productDetailsAtom);
+  const { user } = useAtomValue(userAtom);
   const [selectedSize, setSelectedSize] = useState<CupSize>('M');
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const addToCart = useSetAtom(addToCartAtom);
 
   useEffect(() => {
     if (id) {
@@ -49,6 +42,25 @@ export default function CatalogItemScreen() {
   const currentProduct = product;
   const description = currentProduct.description?.trim();
   const shouldCollapseDescription = description.length > 120;
+
+  const handleAddToCart = async () => {
+    let quantity = 1;
+    const isAlreadyInCart = user?.cart?.some(item => item.productId === currentProduct.id) ?? false;
+
+    if (isAlreadyInCart) {
+      quantity += 1;
+    }
+
+    await addToCart({
+      productId: currentProduct.id,
+      name: currentProduct.name,
+      subTitle: currentProduct.subTitle,
+      price: currentProduct.price,
+      size: selectedSize,
+      quantity,
+    });
+    router.push('/(app)/cart');
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -162,7 +174,7 @@ export default function CatalogItemScreen() {
             <Text style={styles.footerPrice}>{currentProduct.price} ₽</Text>
           </View>
 
-          <Pressable onPress={() => router.push('/(app)/cart')} style={styles.buyButton}>
+          <Pressable onPress={handleAddToCart} style={styles.buyButton}>
             <Text style={styles.buyButtonText}>В корзину</Text>
           </Pressable>
         </View>

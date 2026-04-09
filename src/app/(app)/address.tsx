@@ -45,7 +45,11 @@ export default function AddressScreen() {
       return;
     }
 
-    await saveUser({ address: trimmedAddress, comment: trimmedComment });
+    await saveUser({
+      address: trimmedAddress,
+      comment: trimmedComment,
+      cart: savedUser.user?.cart || [],
+    });
     router.push('/(app)/catalog');
   };
 

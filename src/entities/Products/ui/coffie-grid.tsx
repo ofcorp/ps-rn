@@ -1,6 +1,7 @@
-import { router } from 'expo-router';
+import { Colors } from '@/constants/theme';
 import { useAtomValue } from 'jotai';
-import { StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { IProduct } from '../model/product.model';
 import { productAtom } from '../model/product.state';
 import { CoffeeCard } from './coffie-card';
 
@@ -11,53 +12,49 @@ export default function CoffeeGrid() {
     return <Text style={{ color: 'red' }}>Ошибка загрузки продуктов: {error}</Text>;
   }
 
-  if (isLoading) {
-    return <Text>Загрузка продуктов...</Text>;
-  }
-
   if (!products || products.length === 0) {
     return <Text>Продукты не найдены.</Text>;
   }
 
-  const rows = [];
-  for (let i = 0; i < products.length; i += 2) {
-    rows.push(
-      <View key={`row-${i}`} style={styles.rowContainer}>
-        <View style={styles.cardPlaceholder}>
-          <CoffeeCard
-            image={products[i].image}
-            name={products[i].name}
-            subTitle={products[i].subTitle}
-            price={products[i].price}
-            rating={products[i].rating}
-            onAddPress={() => router.push(`/product/${products[i].id}`)}
-          />
-        </View>
-        {i + 1 < products.length && (
-          <View style={styles.cardPlaceholder}>
-            <CoffeeCard
-              image={products[i + 1].image}
-              name={products[i + 1].name}
-              subTitle={products[i + 1].subTitle}
-              price={products[i + 1].price}
-              rating={products[i + 1].rating}
-              onAddPress={() => router.push(`/product/${products[i + 1].id}`)}
-            />
-          </View>
-        )}
-      </View>,
+  const renderCard = ({ item }: { item: IProduct }) => {
+    return (
+      <View style={styles.cardPlaceholder}>
+        <CoffeeCard {...item} />
+      </View>
     );
-  }
-  return <View>{rows}</View>;
+  };
+
+  return (
+    <>
+      <FlatList
+        refreshControl={
+          <RefreshControl
+            tintColor={Colors.main.button}
+            titleColor={Colors.main.button}
+            refreshing={isLoading}
+          />
+        }
+        data={products}
+        keyExtractor={item => item.id.toString()}
+        renderItem={renderCard}
+        numColumns={2}
+        columnWrapperStyle={styles.rowContainer}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
   rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 16,
+    marginBottom: 16,
   },
   cardPlaceholder: {
     flex: 1,
   },
+  content: {
+    paddingBottom: 110,
+  },
+  activity: {},
 });

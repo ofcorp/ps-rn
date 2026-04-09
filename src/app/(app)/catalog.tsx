@@ -8,6 +8,7 @@ import CoffeeGrid from '@/entities/Products/ui/coffie-grid';
 import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CatalogScreen() {
   const [selectedCategory, setSelectedCategory] = useState<keyof typeof Categories>('all');
@@ -32,31 +33,25 @@ export default function CatalogScreen() {
   }, [selectedCategory, debouncedSearchText, loadProducts]);
 
   return (
-    <View style={styles.rootContainer}>
+    <SafeAreaView style={styles.rootContainer}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView
-        style={styles.container}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.headerBackground}>
-          <LocationHeader />
+      <View style={styles.headerBackground}>
+        <LocationHeader />
 
-          <SearchBar placeholder="Найти кофе" value={searchText} onChangeText={setSearchText} />
-        </View>
-        <View style={styles.contentContainer}>
-          <CategoryFilter
-            categories={Object.keys(Categories) as (keyof typeof Categories)[]}
-            selectedCategory={selectedCategory}
-            onSelectCategory={setSelectedCategory}
-          />
+        <SearchBar placeholder="Найти кофе" value={searchText} onChangeText={setSearchText} />
+      </View>
+      <View style={styles.contentContainer}>
+        <CategoryFilter
+          categories={Object.keys(Categories) as (keyof typeof Categories)[]}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
 
-          <View style={styles.gridContainer}>
-            <CoffeeGrid />
-          </View>
+        <View style={styles.gridContainer}>
+          <CoffeeGrid />
         </View>
-      </ScrollView>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -65,21 +60,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.main.backgroundWhite,
   },
-  container: {
-    flex: 1,
-    backgroundColor: Colors.main.backgroundWhite,
-  },
   headerBackground: {
-    flex: 1,
     height: 170,
     backgroundColor: Colors.main.backgroundBlack,
   },
   contentContainer: {
+    flex: 1,
     paddingVertical: 16,
   },
   gridContainer: {
+    flex: 1,
+    marginTop: 8,
     paddingHorizontal: 30,
-    paddingVertical: 16,
-    gap: 16,
+    paddingTop: 16,
   },
 });
