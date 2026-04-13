@@ -12,3 +12,15 @@ export interface IUserCartItem {
   price: number;
   quantity: number;
 }
+
+export interface IOrderItem {
+  id: number;
+  size: string;
+  quantity: number;
+}
+
+export interface IOrder {
+  address: string;
+  notes: string;
+  orderItems: IOrderItem[];
+}

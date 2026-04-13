@@ -1,7 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { atom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
-import { IUser } from './user.interface';
+import { IOrder, IUser } from './user.interface';
+import axios, { AxiosError } from 'axios';
+import { API } from '@/entities/Products/api/api';
 
 export interface IUserState {
   user: IUser | null;
@@ -30,13 +32,6 @@ export const updateUserAtom = atom(
       isLoading: false,
       error: null,
     });
-  },
-);
-
-export const clearUserAtom = atom(
-  get => get(userAtom),
-  async (_get, set) => {
-    set(userAtom, initialState);
   },
 );
 
@@ -91,6 +86,50 @@ export const removeFromCartAtom = atom(
       user: {
         ...currentState.user,
         cart: updatedCart,
+      },
+    });
+  },
+);
+
+export const processOrderAtom = atom(
+  get => get(userAtom),
+  async (get, set) => {
+    const currentState = await get(userAtom);
+    if (!currentState.user || !currentState.user.cart || currentState.user.cart.length === 0) {
+      return;
+    }
+
+    try {
+      const response = await axios.post<IOrder>(API.order, {
+        address: currentState.user.address,
+        notes: currentState.user.comment,
+        orderItems: currentState.user.cart.map(item => ({
+          id: item.productId,
+          size: item.size,
+          quantity: item.quantity,
+        })),
+      });
+      if (response.status !== 200) {
+        set(userAtom, {
+        ...currentState,
+        error: `Failed to process order: ${response.statusText}`,
+      });
+      return;
+      }
+    } catch (error) {
+      const errorMessage = error instanceof AxiosError ? error.response?.data?.message || error.message : 'Unknown error';
+      set(userAtom, {
+        ...currentState,
+        error: errorMessage,
+      });
+      return;
+    }
+
+    set(userAtom, {
+      ...currentState,
+      user: {
+        ...currentState.user,
+        cart: [],
       },
     });
   },

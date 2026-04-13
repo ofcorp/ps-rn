@@ -11,7 +11,7 @@ export default function TabLayout() {
   const isDetailRoute = !['/catalog', '/cart', '/address', '/success'].includes(pathname);
   const isHomeActive = pathname === '/catalog' || pathname.startsWith('/catalog/') || isDetailRoute;
   const isCartActive = ['/cart', '/address', '/success'].includes(pathname);
-  const hideTabs = pathname === '/success' || isDetailRoute;
+  const hideTabs = isDetailRoute;
 
   return (
     <Tabs>
