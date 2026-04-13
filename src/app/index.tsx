@@ -4,6 +4,7 @@ import { Colors, FontFamily, FontSizes } from '@/constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Animated, ImageBackground, StyleSheet, Text } from 'react-native';
+import { Notification } from '@/components/notification/notification';
 
 export default function HomeScreen() {
   const router = useRouter();

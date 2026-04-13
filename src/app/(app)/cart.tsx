@@ -2,7 +2,8 @@ import EditIcon from '@/assets/icons/edit';
 import Button from '@/components/button';
 import { BottomTabInset, Colors, FontFamily, FontSizes, Radius, Spacing } from '@/constants/theme';
 import { productAtom } from '@/entities/Products/model/product.state';
-import { updateUserAtom, userAtom } from '@/entities/User/model/user.state';
+import { processOrderAtom, updateUserAtom, userAtom } from '@/entities/User/model/user.state';
+import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { Image, Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
@@ -12,9 +13,9 @@ const DELIVERY_PRICE = 100;
 
 export default function CartScreen() {
   const { products } = useAtomValue(productAtom);
-  const { user } = useAtomValue(userAtom);
+  const { user, error } = useAtomValue(userAtom);
   const saveUser = useSetAtom(updateUserAtom);
-
+  const processOrder = useSetAtom(processOrderAtom);
   const cartItems = user?.cart ?? [];
   const deliveryAddress = user?.address?.trim() || 'Не задан';
   const deliveryComment = user?.comment?.trim() || 'Комментарий к доставке';
@@ -40,6 +41,50 @@ export default function CartScreen() {
       comment: user.comment,
       cart: updatedCart,
     });
+  };
+
+  const allowsNotification = async () => {
+    const settings = await Notifications.getPermissionsAsync();
+    return (
+      settings.granted || settings.ios?.status == Notifications.IosAuthorizationStatus.PROVISIONAL
+    );
+  };
+
+  const requestPermissions = async () => {
+    return Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+      },
+    });
+  };
+
+  const scheduleNotification = async () => {
+    const granted = await allowsNotification();
+    if (!granted) {
+      await requestPermissions();
+    }
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Ваш кофе готов!',
+        body: 'Хорошего дня!',
+        data: { success: true },
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 10,
+      },
+    });
+  };
+
+  const handleOrder = async () => {
+    await processOrder();
+    if (error) {
+      return;
+    }
+    await scheduleNotification();
+    router.push('/(app)/success');
   };
 
   return (
@@ -182,7 +227,7 @@ export default function CartScreen() {
 
         <View style={styles.footer}>
           <Button
-            onPress={() => router.push(cartItems.length ? '/(app)/success' : '/(app)/catalog')}
+            onPress={() => (cartItems.length ? handleOrder() : router.push('/(app)/catalog'))}
             text={cartItems.length ? 'Заказать' : 'Перейти в каталог'}
           />
         </View>
